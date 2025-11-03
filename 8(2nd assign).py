@@ -1,33 +1,39 @@
-def multiply_matrices(A, B):
-    rows_A, cols_A = len(A), len(A[0])
-    rows_B, cols_B = len(B), len(B[0])
+def get_matrix(name):
+    r = int(input(f"Enter number of rows for {name}: "))
+    c = int(input(f"Enter number of columns for {name}: "))
+    print(f"Enter elements of {name} row by row:")
+    mat = []
+    for i in range(r):
+        row = []
+        print(f"Row {i+1}:")
+        for j in range(c):
+            val = int(input(f"  Element [{i+1}][{j+1}]: "))
+            row.append(val)
+        mat.append(row)
+    return mat, r, c
 
-    if cols_A != rows_B:
-        print("Error: Matrix dimensions are not compatible for multiplication.")
+def multiply(mat1, mat2, r1, c1, r2, c2):
+    if c1 != r2:
+        print("Matrix multiplication not possible.")
         return None
+    res = []
+    for i in range(r1):
+        row = []
+        for j in range(c2):
+            s = 0
+            for k in range(c1):
+                s += mat1[i][k] * mat2[k][j]
+            row.append(s)
+        res.append(row)
+    return res
 
-    result = [[0 for _ in range(cols_B)] for _ in range(rows_A)]
+m1, r1, c1 = get_matrix("Matrix 1")
+m2, r2, c2 = get_matrix("Matrix 2")
+prod = multiply(m1, m2, r1, c1, r2, c2)
 
-    for i in range(rows_A):
-        for j in range(cols_B):
-            for k in range(cols_A):
-                result[i][j] += A[i][k] * B[k][j]
-    return result
-
-
-print("Enter size of first matrix (rows cols): ", end="")
-r1, c1 = map(int, input().split())
-print("Enter elements of first matrix row by row:")
-A = [list(map(int, input().split())) for _ in range(r1)]
-
-print("\nEnter size of second matrix (rows cols): ", end="")
-r2, c2 = map(int, input().split())
-print("Enter elements of second matrix row by row:")
-B = [list(map(int, input().split())) for _ in range(r2)]
-
-result = multiply_matrices(A, B)
-
-if result:
+if prod:
     print("\nResultant Matrix:")
-    for row in result:
-        print(*row)
+    for r in prod:
+        for val in r:
+            print(val, end=" ")
+        print()
